@@ -21,3 +21,4 @@ people.map = function (fn) {
 const people25 = people.map(person => `${person.name} ${person.age}`);
 
 people25.forEach(person => console.log(person));
+
