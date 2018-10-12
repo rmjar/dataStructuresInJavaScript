@@ -1,0 +1,91 @@
+* {
+  font-family: "Courier New", Courier, monospace;
+}
+body {
+  margin: 10px auto;
+  max-width: 1000px;
+}
+
+.shopping-list {
+  list-style-type: none;
+  padding: 0px;
+
+  li {
+    padding: 2px;
+    margin: 5px 0px;
+    border: 1px solid lightgrey;
+    &:hover {
+      border: 1px solid gray;
+    }
+
+    span {
+      display: inline-block;
+    }
+
+    .checkbox {
+      margin-right: 5px;
+      cursor: pointer;
+    }
+
+    .name {
+      width: 300px;
+    }
+
+    .category {
+      width: 200px;
+    }
+
+    .shops {
+      span {
+        margin-right: 5px;
+      }
+    }
+
+    .button {
+      float: right;
+    }
+  }
+}
+
+.add-new, .filters {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  flex-wrap: wrap;
+
+  & :first-child {
+    flex-basis: 100%;
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    margin-right: 10px;
+    span {
+      margin-right: 5px;
+    }
+  }
+  
+  &__actions {
+    flex-direction: column;
+  }
+}
+
+.button {
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-block;
+  &:hover {
+    background-color: lightgray;
+  }
+}
+
+input, select {
+  padding: 1px 0px;
+  border: 1px solid lightgray;
+  &:hover {
+    border: 1px solid gray;
+  }
+}
