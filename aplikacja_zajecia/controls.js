@@ -1,9 +1,17 @@
 'use strict';
 
-function createContainerWithTitle(props) {
-
+function createContainerWithTitle(props) { // { className: '', children: [] }
+  const control = document.createElement('div');
+  control.className = props.className;
+  const title = document.createElement(props.titleSelector);
+  title.innerText = props.title;
+  control.appendChild(title);
   return {
     render(host) {
+      host.appendChild(control);
+      props.children.forEach(x => {
+        x.render(control);
+      });
     }
   }
 }
@@ -41,9 +49,13 @@ function createLabel(props) {
 }
 
 function createButton(props) {
-
+  const button = document.createElement('span');
+  button.innerText = props.title;
+  button.className = props.className;
+  button.addEventListener('click', props.onclick);
   return {
     render: function (host) {
+      host.appendChild(button);
     }
   }
 }

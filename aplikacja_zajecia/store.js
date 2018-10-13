@@ -2,6 +2,10 @@
 
 const store = {
   addNewItem: function (item) {
+    const todos = this.getData('todos'); // todos == []
+    todos.push(item);
+    this.setData('todos', todos);
+    appStart(todos);
   },
 
   updateItem: function (item) {

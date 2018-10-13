@@ -1,9 +1,32 @@
 'use strict';
 
 function createApp(props) {
+  const app = createContainerWithTitle({
+    className: 'root',
+    title: 'Lista zakupów',
+    titleSelector: 'h1',
+    children: [
+      createButton({
+        title: 'dodaj nowy produkt', onclick: () => {
+          store.addNewItem({ sss });
+        }
+      })
+    ]
+  });
+
+  const newProduct = createContainerWithTitle({
+    className: 'new-item',
+    title: 'Nowy produkt',
+    titleSelector: 'h3',
+    children: [
+      createButton({ title: 'kliknij mnie 2', onclick: () => alert('kliknięty') })
+    ]
+  });
 
   return {
     render: function (host) {
+      app.render(host);
+      newProduct.render(host);
     }
   }
 }
