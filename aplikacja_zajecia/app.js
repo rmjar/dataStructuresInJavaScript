@@ -47,6 +47,16 @@ function appStart(todos) {
   if (store.getData('shops').length === 0) {
     store.setData('shops', ['Społem', 'Lidl', 'Żabka', 'Warzywniak']);
   }
+  if (store.getData('todos').length === 0) {
+    store.setData('todos', [
+      { name: 'ziemniaki', category: 'warzywa i owoce', shops: ['Społem', 'Warzywniak'], checked: false },
+      { name: 'muszynianka', category: 'napoje', shops: ['Społem'], checked: false },
+      { name: 'jabłka', category: 'warzywa i owoce', shops: ['Lidl', 'Warzywniak'], checked: false },
+      { name: 'chleb', category: 'pieczywo', shops: ['Lidl'], checked: true },
+      { name: 'cola', category: 'napoje', shops: ['Społem', 'Żabka'], checked: false },
+      { name: 'brokuły', category: 'warzywa i owoce', shops: ['Warzywniak'], checked: false },
+    ]);
+  }
 
   const categories = store.getData('categories');
   const shops = store.getData('shops');
