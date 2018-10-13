@@ -8,7 +8,7 @@ function createApp(props) {
   }
 }
 
-function createMultiactions() {
+function createInputsRow(props) {
 
   return {
     render: function (host) {
@@ -16,7 +16,7 @@ function createMultiactions() {
   }
 }
 
-function createInputsRow(props) {
+function createMultiactions() {
 
   return {
     render: function (host) {
