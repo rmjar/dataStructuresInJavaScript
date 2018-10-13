@@ -16,10 +16,12 @@ function createContainerWithTitle(props) { // { className: '', children: [] }
   }
 }
 
-function createInput() {
-
+function createInput(props) {
+  const inputField = document.createElement('input');
+  inputField.className = props.className;
   return {
     render: function (host) {
+      host.appendChild(inputField);
     }
   }
 }

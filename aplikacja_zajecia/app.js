@@ -10,7 +10,7 @@ function createApp(props) {
         title: 'dodaj nowy produkt', onclick: () => {
           store.addNewItem({ sss });
         }
-      })
+      }),
     ]
   });
 
