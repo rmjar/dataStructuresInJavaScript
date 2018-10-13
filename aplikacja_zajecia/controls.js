@@ -27,9 +27,16 @@ function createInput(props) {
 }
 
 function createSelect(props) {
-
+  const selectField = document.createElement('select');
+  selectField.className = props.className;
+  props.options.forEach(x => {
+    const option = document.createElement('option');
+    option.text = x;
+    selectField.options.add(option);
+  });
   return {
     render: function (host) {
+      host.appendChild(selectField);
     }
   }
 }

@@ -11,6 +11,11 @@ function createApp(props) {
           store.addNewItem({ sss });
         }
       }),
+      createInput({ className: 'new-name-input' }),
+      createSelect({
+        className: 'new-category-select',
+        options: store.getData('categories')
+      })
     ]
   });
 
