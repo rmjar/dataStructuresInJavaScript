@@ -9,6 +9,13 @@ const store = {
   },
 
   updateItem: function (item) {
+    const todos = this.getData('todos');
+
+    const it = todos.find(x => x.name === item.name);
+    it.checked = props.checked;
+
+    this.setData('todos', todos);
+    appStart(todos);
   },
 
   deleteItem: function (item) {
