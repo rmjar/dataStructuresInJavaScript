@@ -1,71 +1,91 @@
 'use strict';
 
-function createContainerWithTitle(props) { // { className: '', children: [] }
-  const control = document.createElement('div');
-  control.className = props.className;
-  const title = document.createElement(props.titleSelector);
+function createContainerWithTitle(props) {
+  const container = document.createElement(props.containerSelector || 'div');
+  container.className = props.className;
+  const title = document.createElement(props.titleSelector || 'h1');
   title.innerText = props.title;
-  control.appendChild(title);
+
   return {
     render(host) {
-      host.appendChild(control);
-      props.children.forEach(x => {
-        x.render(control);
-      });
+      container.appendChild(title);
+      props.children && props.children.forEach(x => x.render(container));
+      host.appendChild(container);
+    },
+    getValue: function () {
+      return props.children && props.children.map(x => x.getValue());
     }
   }
 }
 
-function createInput(props) {
-  const inputField = document.createElement('input');
-  inputField.className = props.className;
+function createInput() {
+  const input = document.createElement('input');
+
   return {
     render: function (host) {
-      host.appendChild(inputField);
+      host.appendChild(input);
+    },
+    getValue: function () {
+      return input.value;
     }
   }
 }
 
-// multiple w propsach
 function createSelect(props) {
-  const selectField = document.createElement('select');
-  selectField.className = props.className;
-  if (props.isMultiple) {
-    selectField.setAttribute('multiple', 'multiple');
+  const select = document.createElement('select');
+  if (props.multiple) {
+    select.setAttribute('multiple', 'multiple');
   }
-  props.options.forEach(x => {
-    const option = document.createElement('option');
-    option.text = x;
-    selectField.options.add(option);
-  });
+
   return {
     render: function (host) {
-      host.appendChild(selectField);
+      props.options.forEach(x => {
+        const option = document.createElement('option');
+        option.text = x;
+        option.value = x;
+        select.add(option);
+      });
+      host.appendChild(select);
+    },
+    getValue: function () {
+      return props.multiple
+        ? Array.prototype.map.call(select.selectedOptions, o => o.value)
+        : select.value;
     }
   }
 }
 
 function createCheckbox(props) {
+  const checkbox = document.createElement('span');
+  checkbox.className = props.checked ? 'checkbox checkbox--checked' : 'checkbox checkbox--unchecked';
+  checkbox.innerText = props.checked ? '[X]' : '[ ]';
+  checkbox.addEventListener('click', props.onclick);
 
   return {
     render: function (host) {
+      host.appendChild(checkbox);
     }
   }
 }
 
 function createLabel(props) {
+  const label = document.createElement('span');
+  label.className = props.className;
+  label.innerText = props.label;
 
   return {
     render: function (host) {
+      host.appendChild(label);
     }
   }
 }
 
 function createButton(props) {
   const button = document.createElement('span');
-  button.innerText = props.title;
-  button.className = props.className;
+  button.className = 'button';
+  button.innerText = props.label;
   button.addEventListener('click', props.onclick);
+
   return {
     render: function (host) {
       host.appendChild(button);

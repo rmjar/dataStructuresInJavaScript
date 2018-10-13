@@ -1,69 +1,193 @@
 'use strict';
 
 function createApp(props) {
-  const app = createContainerWithTitle({
-    className: 'root',
-    title: 'Lista zakupów',
-    titleSelector: 'h1',
-    children: [
-      createInput({ className: 'new-name-input' }),
-      createSelect({
-        className: 'new-category-select',
-        options: store.getData('categories')
-      }),
-      createSelect({
-        className: 'new-shops-select',
-        options: store.getData('shops'),
-        isMultiple: true
-      })
-    ]
+  const addNewItem = createContainerWithTitle({
+    children: [createInputsRow({
+      categories: props.categories,
+      shops: props.shops,
+      onchange: item => store.addNewItem(item)
+    })],
+    titleSelector: 'h3',
+    title: 'nowy produkt',
+    className: 'add-new'
   });
 
-  const newProduct = createContainerWithTitle({
-    className: 'new-item',
-    title: 'Nowy produkt',
+  const filters = createContainerWithTitle({
+    children: [createInputsRow({
+      categories: props.categories,
+      shops: props.shops,
+      onchange: item => store.filterItems(item),
+      onclear: () => store.filterItems({})
+    })],
     titleSelector: 'h3',
-    children: [
-      createButton({ title: 'kliknij mnie 2', onclick: () => alert('kliknięty') })
-    ]
+    title: 'filtry',
+    className: 'filters'
+  });
+
+  const multiactions = createContainerWithTitle({
+    children: [createMultiactions()],
+    titleSelector: 'h3',
+    title: 'multiakcje',
+    className: 'multiactions'
+  });
+
+  const unchecked = createContainerWithTitle({
+    children: [createList({ data: props.todos.filter(x => !x.checked) })],
+    titleSelector: 'h2',
+    title: 'do kupienia',
+    className: 'to-buy'
+  });
+
+  const checked = createContainerWithTitle({
+    children: [createList({ data: props.todos.filter(x => x.checked) })],
+    titleSelector: 'h2',
+    title: 'kupione',
+    className: 'bought'
+  });
+
+  const root = createContainerWithTitle({
+    children: [addNewItem, filters, multiactions, unchecked, checked],
+    title: 'lista zakupów',
+    className: 'root'
   });
 
   return {
     render: function (host) {
-      app.render(host);
-      newProduct.render(host);
+      root.render(host);
     }
   }
 }
 
 function createInputsRow(props) {
+  const nameControl = createContainerWithTitle({
+    children: [createInput()],
+    titleSelector: 'span',
+    title: 'nazwa produktu:',
+    className: 'add-new__name'
+  });
+
+  const categoryControl = createContainerWithTitle({
+    children: [createSelect({ options: props.categories })],
+    titleSelector: 'span',
+    title: 'kategoria:',
+    className: 'add-new__category'
+  });
+
+  const shopsControl = createContainerWithTitle({
+    children: [createSelect({ options: props.shops, multiple: true })],
+    titleSelector: 'span',
+    title: 'sklepy:',
+    className: 'add-new__shops'
+  });
+
+  const actionsControl = createContainerWithTitle({
+    children: [
+      createButton({
+        label: '[V] zatwierdź',
+        onclick: () => {
+          props.onchange({
+            name: nameControl.getValue()[0],
+            category: categoryControl.getValue()[0],
+            shops: shopsControl.getValue()[0]
+          });
+        }
+      }),
+      createButton({
+        label: '[X] wyczyść',
+        onclick: props.onclear
+      })
+    ],
+    titleSelector: 'span',
+    title: 'akcje:',
+    className: 'add-new__actions'
+  });
 
   return {
     render: function (host) {
+      nameControl.render(host);
+      categoryControl.render(host);
+      shopsControl.render(host);
+      actionsControl.render(host);
     }
   }
 }
 
 function createMultiactions() {
+  const checkAll = createButton({
+    label: '[zaznacz wszystkie]', onclick: () => store.checkAll()
+  });
+  const uncheckAll = createButton({
+    label: '[odznacz wszystkie]', onclick: () => store.uncheckAll()
+  });
+  const switchSelection = createButton({
+    label: '[zamień zaznaczenie]', onclick: () => store.switchSelection()
+  });
+  const deleteAll = createButton({
+    label: '[usuń wszystkie]', onclick: () => store.deleteAll()
+  });
+  const deleteBought = createButton({
+    label: '[usuń kupione]', onclick: () => store.deleteBought()
+  });
+  const sortName = createButton({
+    label: '[sortuj po nazwie]', onclick: () => store.sort('name')
+  });
+  const sortCategory = createButton({
+    label: '[sortuj po kategorii]', onclick: () => store.sort('category')
+  });
+  const sortShops = createButton({
+    label: '[sortuj po sklepach]', onclick: () => store.sort('shops')
+  });
 
   return {
     render: function (host) {
+      checkAll.render(host);
+      uncheckAll.render(host);
+      switchSelection.render(host);
+      deleteAll.render(host);
+      deleteBought.render(host);
+      sortName.render(host);
+      sortCategory.render(host);
+      sortShops.render(host);
     }
   }
 }
 
 function createList(props) {
+  const list = document.createElement('ul');
+  list.className = props.className || 'shopping-list';
 
   return {
     render: function (host) {
+      props.data.forEach(x => {
+        createListItem({ item: x }).render(list);
+      });
+      host.appendChild(list);
     }
   }
 }
 
 function createListItem(props) {
+  const listItem = document.createElement('li');
+
+  const checkbox = createCheckbox({
+    checked: props.item.checked, onclick: (e) => {
+      props.item.checked = e.target.className.indexOf('checkbox--checked') === -1;
+      store.updateItem(props.item);
+    }
+  });
+  const nameControl = createLabel({ label: props.item.name, className: 'name' });
+  const categoryControl = createLabel({ label: props.item.category, className: 'category' });
+  const shopsControl = createLabel({ label: props.item.shops.join(', '), className: 'shops' });
+  const deleteButton = createButton({ label: '[X]', onclick: () => { store.deleteItem(props.item); } });
 
   return {
     render: function (host) {
+      checkbox.render(listItem);
+      nameControl.render(listItem);
+      categoryControl.render(listItem);
+      shopsControl.render(listItem);
+      deleteButton.render(listItem);
+      host.appendChild(listItem);
     }
   }
 }
@@ -74,16 +198,6 @@ function appStart(todos) {
   }
   if (store.getData('shops').length === 0) {
     store.setData('shops', ['Społem', 'Lidl', 'Żabka', 'Warzywniak']);
-  }
-  if (store.getData('todos').length === 0) {
-    store.setData('todos', [
-      { name: 'ziemniaki', category: 'warzywa i owoce', shops: ['Społem', 'Warzywniak'], checked: false },
-      { name: 'muszynianka', category: 'napoje', shops: ['Społem'], checked: false },
-      { name: 'jabłka', category: 'warzywa i owoce', shops: ['Lidl', 'Warzywniak'], checked: false },
-      { name: 'chleb', category: 'pieczywo', shops: ['Lidl'], checked: true },
-      { name: 'cola', category: 'napoje', shops: ['Społem', 'Żabka'], checked: false },
-      { name: 'brokuły', category: 'warzywa i owoce', shops: ['Warzywniak'], checked: false },
-    ]);
   }
 
   const categories = store.getData('categories');
