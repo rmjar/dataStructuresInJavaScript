@@ -10,7 +10,7 @@ const people = [
   { name: 'Sylwia', age: 25 }
 ];
 
-arr.find = function (fn) {
+people.find = function (fn) {
   for (let i = 0; i < this.length; i++) {
     if (fn(this[i], i, this)) {
       return this[i];
