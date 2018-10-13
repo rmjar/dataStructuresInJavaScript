@@ -6,15 +6,15 @@ function createApp(props) {
     title: 'Lista zakupów',
     titleSelector: 'h1',
     children: [
-      createButton({
-        title: 'dodaj nowy produkt', onclick: () => {
-          store.addNewItem({ sss });
-        }
-      }),
       createInput({ className: 'new-name-input' }),
       createSelect({
         className: 'new-category-select',
         options: store.getData('categories')
+      }),
+      createSelect({
+        className: 'new-shops-select',
+        options: store.getData('shops'),
+        isMultiple: true
       })
     ]
   });

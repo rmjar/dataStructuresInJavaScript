@@ -26,9 +26,13 @@ function createInput(props) {
   }
 }
 
+// multiple w propsach
 function createSelect(props) {
   const selectField = document.createElement('select');
   selectField.className = props.className;
+  if (props.isMultiple) {
+    selectField.setAttribute('multiple', 'multiple');
+  }
   props.options.forEach(x => {
     const option = document.createElement('option');
     option.text = x;
