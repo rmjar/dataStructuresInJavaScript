@@ -17,3 +17,24 @@ const public = {
   email: "mayeraguirre@bugsall.com",
   about: "Elit elit reprehenderit ullamco quis anim exercitation ut esse fugiat. Anim pariatur dolor qui aute minim. Cillum exercitation aliquip aliqua voluptate ullamco et incididunt enim.",
 };
+
+
+const privateEntries = Object.entries(private);
+const publicEntries = Object.entries(public);
+
+const entries = privateEntries.concat(publicEntries);
+entries.sort((x, y) => x[0].localeCompare(y[0]));
+
+const newObj = entries
+  .sort((x, y) => x[0].localeCompare(y[0]))
+  .reduce((agg, curr) => {
+    agg[curr[0]] = curr[1];
+    return agg;
+  }, {})
+
+console.log(newObj);
+
+const newObj2 = {};
+entries.forEach(element => {
+  newObj2[element[0]] = element[1];
+});

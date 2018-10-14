@@ -5,6 +5,7 @@ const store = {
   // w sekcji 'nowy produkt'
   addNewItem: function (item) {
     const todos = this.getData('todos');
+    item.checked = false;
     todos.push(item);
 
     this.setData('todos', todos);
@@ -17,7 +18,7 @@ const store = {
     const todos = this.getData('todos');
 
     const foundItem = todos.find(x => x.name === item.name);
-    foundItem.checked = props.checked;
+    foundItem.checked = item.checked;
 
     this.setData('todos', todos);
     appStart(todos);
@@ -31,6 +32,9 @@ const store = {
     const todos = this.getData('todos');
 
     // implementacja
+    const foundItem = todos.find(x => x.name === item.name);
+    const itemIndex = todos.indexOf(foundItem)
+    todos.splice(itemIndex, 1);
 
     this.setData('todos', todos);
     appStart(todos);
@@ -43,6 +47,9 @@ const store = {
     const todos = this.getData('todos');
 
     // implementacja
+    todos.forEach(e => {
+      e.checked = true;
+    });
 
     this.setData('todos', todos);
     appStart(todos);
@@ -55,6 +62,9 @@ const store = {
     const todos = this.getData('todos');
 
     // implementacja
+    todos.forEach(element => {
+      element.checked = false;
+    });
 
     this.setData('todos', todos);
     appStart(todos);
@@ -68,6 +78,9 @@ const store = {
     const todos = this.getData('todos');
 
     // implementacja
+    todos.forEach(element => {
+      element.checked = !element.checked;
+    });
 
     this.setData('todos', todos);
     appStart(todos);
@@ -80,6 +93,7 @@ const store = {
     const todos = this.getData('todos');
 
     // implementacja
+    todos.length = 0;
 
     this.setData('todos', todos);
     appStart(todos);
@@ -89,12 +103,13 @@ const store = {
   // w sekcji 'multiakcje'
   deleteBought: function () {
     // usuń elementy tablicy todos, które spełniają warunek checked === true
-    const todos = this.getData('todos');
+    let todos = this.getData('todos');
 
     // implementacja
+    const foundItems = todos.filter(x => !x.checked);
 
-    this.setData('todos', todos);
-    appStart(todos);
+    this.setData('todos', foundItems);
+    appStart(foundItems);
   },
 
   // funkcja wywoływana na zdarzenie kliknięcia [V zatwierdź] 
@@ -107,8 +122,12 @@ const store = {
     const todos = this.getData('todos');
 
     // implementacja
+    const filteredItems = todos
+      .filter(x => !filter.name || x.name.indexOf(filter.name) < 0) //jeśli filtr pusty działa pierwsza część z negacją, jeśli wypełniony - sprawdza
+      .filter(x => filter.category !== "" ? x.category === filter.category : true)
+      .filter(x => filter)
 
-    appStart(todos);
+    appStart(filteredItems);
   },
 
   // funkcja wywoływana na zdarzenie kliknięcia przycisku [sortuj po nazwie],
